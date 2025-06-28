@@ -2,8 +2,8 @@
 
 An autonomous AI agent powered by Google's Gemini AI, running in a Docker container for automated task execution and data processing.
 
-[![Docker Build](https://github.com/yourusername/gemini-autonomous-agent/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/yourusername/gemini-autonomous-agent/actions/workflows/docker-publish.yml)
-[![Docker Pulls](https://img.shields.io/docker/pulls/yourusername/gemini-autonomous-agent)](https://hub.docker.com/r/yourusername/gemini-autonomous-agent)
+[![Docker Build](https://github.com/chrisurf/docker-gemini-cli/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/chrisurf/docker-gemini-cli/actions/workflows/docker-publish.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/chrisurf/gemini-autonomous-agent)](https://hub.docker.com/r/chrisurf/gemini-autonomous-agent)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Features
@@ -28,7 +28,7 @@ An autonomous AI agent powered by Google's Gemini AI, running in a Docker contai
 
 1. **Pull the image:**
 ```bash
-docker pull yourusername/gemini-autonomous-agent:latest
+docker pull chrisurf/gemini-autonomous-agent:latest
 ```
 
 2. **Run with environment variables:**
@@ -37,7 +37,7 @@ docker run -d \
   --name gemini-agent \
   -e GEMINI_API_KEY=your_api_key_here \
   -v $(pwd)/data:/app/data \
-  yourusername/gemini-autonomous-agent:latest
+  chrisurf/gemini-autonomous-agent:latest
 ```
 
 3. **Submit a task:**
