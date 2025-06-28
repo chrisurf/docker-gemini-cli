@@ -92,6 +92,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
+        load: true
         push: false
         tags: ${{ env.IMAGE_NAME }}:test
         cache-from: type=gha
@@ -99,24 +100,41 @@ jobs:
 
     - name: Test Docker image
       run: |
+        # Verify image was built
+        docker images | grep ${{ env.IMAGE_NAME }}
+        
         # Create test environment
         mkdir -p test_data/{input,output}
         
-        # Test container startup
-        docker run --rm -d \
-          --name gemini-test \
+        # Test 1: Basic container structure and files (override entrypoint)
+        echo "Testing container structure..."
+        docker run --rm --entrypoint="" \
+          -e GEMINI_API_KEY=fake_key \
+          ${{ env.IMAGE_NAME }}:test \
+          /bin/bash -c "ls -la /app/src/ && python --version && whoami"
+        
+        # Test 2: Test health check directly (expected to fail with fake key)
+        echo "Testing health check..."
+        docker run --rm --entrypoint="" \
+          -e GEMINI_API_KEY=fake_key \
+          ${{ env.IMAGE_NAME }}:test \
+          /bin/bash -c "cd /app && python src/health_check.py || echo 'Health check failed as expected with fake API key'"
+        
+        # Test 3: Test Python module imports
+        echo "Testing Python imports..."
+        docker run --rm --entrypoint="" \
+          -e GEMINI_API_KEY=fake_key \
+          ${{ env.IMAGE_NAME }}:test \
+          /bin/bash -c "cd /app && python -c 'import sys; sys.path.append(\"src\"); import autonomous_agent, gemini_client, task_processor; print(\"✅ All imports successful\")'"
+        
+        # Test 4: Test agent mode briefly (will fail but should start)
+        echo "Testing agent mode startup..."
+        timeout 10s docker run --rm \
           -e GEMINI_API_KEY=fake_key \
           -v $(pwd)/test_data:/app/data \
-          ${{ env.IMAGE_NAME }}:test shell
+          ${{ env.IMAGE_NAME }}:test agent || echo "Agent mode test completed (expected timeout/failure)"
         
-        # Wait for container to be ready
-        sleep 5
-        
-        # Test health check
-        docker exec gemini-test python src/health_check.py || true
-        
-        # Cleanup
-        docker stop gemini-test || true
+        echo "✅ All Docker image tests completed successfully!"
 
     - name: Run container structure tests
       run: |
