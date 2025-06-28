@@ -1,6 +1,6 @@
 # Gemini Autonomous Agent
 
-An autonomous AI agent powered by Google’s Gemini AI, running in a Docker container for automated task execution and data processing.
+An autonomous AI agent powered by Google's Gemini AI, running in a Docker container for automated task execution and data processing.
 
 [![Docker Build](https://github.com/yourusername/gemini-autonomous-agent/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/yourusername/gemini-autonomous-agent/actions/workflows/docker-publish.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/yourusername/gemini-autonomous-agent)](https://hub.docker.com/r/yourusername/gemini-autonomous-agent)
@@ -9,7 +9,7 @@ An autonomous AI agent powered by Google’s Gemini AI, running in a Docker cont
 ## Features
 
 - **Autonomous Operation**: Continuously monitors for tasks and executes them automatically
-- **Gemini AI Integration**: Leverages Google’s powerful Gemini AI for intelligent task processing
+- **Gemini AI Integration**: Leverages Google's powerful Gemini AI for intelligent task processing
 - **File-based Task Management**: Simple JSON-based task submission system
 - **Data Processing**: Mounted volumes for seamless data input/output
 - **Health Monitoring**: Built-in health checks and monitoring
@@ -27,13 +27,11 @@ An autonomous AI agent powered by Google’s Gemini AI, running in a Docker cont
 ### Basic Usage
 
 1. **Pull the image:**
-
 ```bash
 docker pull yourusername/gemini-autonomous-agent:latest
 ```
 
-1. **Run with environment variables:**
-
+2. **Run with environment variables:**
 ```bash
 docker run -d \
   --name gemini-agent \
@@ -42,8 +40,7 @@ docker run -d \
   yourusername/gemini-autonomous-agent:latest
 ```
 
-1. **Submit a task:**
-
+3. **Submit a task:**
 ```bash
 # Create a task file
 cat > data/input/task1.json << EOF
@@ -57,8 +54,7 @@ cat > data/input/task1.json << EOF
 EOF
 ```
 
-1. **Check results:**
-
+4. **Check results:**
 ```bash
 # Results will appear in data/output/
 ls data/output/
@@ -69,19 +65,19 @@ cat data/output/task-001_result.json
 
 ### Environment Variables
 
-|Variable            |Description                |Default     |Required|
-|--------------------|---------------------------|------------|--------|
-|`GEMINI_API_KEY`    |Google Gemini API key      |-           |✅       |
-|`GEMINI_MODEL`      |Gemini model to use        |`gemini-pro`|❌       |
-|`GEMINI_TEMPERATURE`|Model temperature (0.0-1.0)|`0.7`       |❌       |
-|`GEMINI_MAX_TOKENS` |Maximum output tokens      |`2048`      |❌       |
-|`LOG_LEVEL`         |Logging level              |`INFO`      |❌       |
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `GEMINI_API_KEY` | Google Gemini API key | - | ✅ |
+| `GEMINI_MODEL` | Gemini model to use | `gemini-pro` | ❌ |
+| `GEMINI_TEMPERATURE` | Model temperature (0.0-1.0) | `0.7` | ❌ |
+| `GEMINI_MAX_TOKENS` | Maximum output tokens | `2048` | ❌ |
+| `LOG_LEVEL` | Logging level | `INFO` | ❌ |
 
 ### Volume Mounts
 
-|Container Path       |Purpose       |Description               |
-|---------------------|--------------|--------------------------|
-|`/app/data/input`    |Task Input    |Place JSON task files here|
-|`/app/data/output`   |Results Output|Completed task results    |
-|`/app/data/processed`|Archive       |Processed task files      |
-|`/app/logs`          |Logging       |Application               |
+| Container Path | Purpose | Description |
+|----------------|---------|-------------|
+| `/app/data/input` | Task Input | Place JSON task files here |
+| `/app/data/output` | Results Output | Completed task results |
+| `/app/data/processed` | Archive | Processed task files |
+| `/app/logs` | Logging | Application
