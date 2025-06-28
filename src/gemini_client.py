@@ -196,10 +196,19 @@ be explicit about your actions and results."""
         return await self.generate_response(prompt, context)
 
     async def health_check(self) -> bool:
-        """Check if Gemini API is accessible"""
+        """Check if Gemini API is accessible with minimal API usage"""
         try:
-            response = await self.generate_response("Health check: respond with 'OK'")
-            return response.get("success", False)
+            # Use a very short test prompt to minimize API usage
+            test_prompt = "Hi"
+            response = await self.generate_response(test_prompt)
+            success = response.get("success", False)
+            
+            if success:
+                logger.info("Health check passed", model=self.model_name)
+            else:
+                logger.warning("Health check failed", error=response.get("error"))
+                
+            return success
         except Exception as e:
             logger.error("Health check failed", error=str(e))
             return False

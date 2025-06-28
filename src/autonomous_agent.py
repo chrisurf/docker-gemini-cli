@@ -34,7 +34,7 @@ class TaskFileHandler(FileSystemEventHandler):
 
     def on_created(self, event):
         if not event.is_directory and event.src_path.endswith(".json"):
-            asyncio.create_task(self.agent.process_task_file(event.src_path))
+            self.agent.schedule_task_processing(event.src_path)
 
 
 class AutonomousAgent:
@@ -46,6 +46,8 @@ class AutonomousAgent:
         self.task_processor = TaskProcessor(self.gemini_client)
         self.running = False
         self.observer = None
+        self.loop = None  # Store reference to main event loop
+        self.pending_tasks = []  # Queue for tasks from file watcher
 
         # Setup signal handlers
         signal.signal(signal.SIGTERM, self._signal_handler)
@@ -53,6 +55,18 @@ class AutonomousAgent:
 
         # Ensure directories exist
         self._setup_directories()
+
+    def schedule_task_processing(self, file_path: str):
+        """Schedule task processing from file watcher thread"""
+        if self.loop and self.loop.is_running():
+            # Schedule the coroutine in the main event loop
+            asyncio.run_coroutine_threadsafe(
+                self.process_task_file(file_path), self.loop
+            )
+        else:
+            # Fallback: add to pending queue
+            self.pending_tasks.append(file_path)
+            logger.warning("Event loop not available, queued task", file_path=file_path)
 
     def _setup_directories(self):
         """Create necessary directories"""
@@ -76,12 +90,16 @@ class AutonomousAgent:
         """Start the autonomous agent"""
         logger.info("Starting Autonomous Agent")
         self.running = True
+        self.loop = asyncio.get_running_loop()  # Store loop reference
 
         # Start file system monitoring
         self._start_file_monitoring()
 
         # Process any existing tasks
         await self._process_existing_tasks()
+
+        # Process any pending tasks from file watcher
+        await self._process_pending_tasks()
 
         # Main event loop
         await self._main_loop()
@@ -101,6 +119,12 @@ class AutonomousAgent:
         input_dir = Path("/app/data/input")
         for task_file in input_dir.glob("*.json"):
             await self.process_task_file(str(task_file))
+
+    async def _process_pending_tasks(self):
+        """Process any tasks that were queued before event loop was ready"""
+        while self.pending_tasks:
+            file_path = self.pending_tasks.pop(0)
+            await self.process_task_file(file_path)
 
     async def process_task_file(self, file_path: str):
         """Process a single task file"""
@@ -166,11 +190,18 @@ class AutonomousAgent:
     async def _main_loop(self):
         """Main event loop"""
         logger.info("Agent main loop started")
+        health_check_counter = 0
 
         while self.running:
             try:
-                # Perform periodic health checks
-                await self._health_check()
+                # Perform health check less frequently (every 30 seconds)
+                health_check_counter += 1
+                if health_check_counter >= 6:  # 6 * 5 seconds = 30 seconds
+                    await self._health_check()
+                    health_check_counter = 0
+
+                # Process any pending tasks
+                await self._process_pending_tasks()
 
                 # Sleep for a short interval
                 await asyncio.sleep(5)
@@ -181,16 +212,20 @@ class AutonomousAgent:
 
     async def _health_check(self):
         """Perform health checks"""
-        # Check Gemini API connectivity
-        if not await self.gemini_client.health_check():
-            logger.warning("Gemini API health check failed")
+        try:
+            # Check Gemini API connectivity (less frequent)
+            if not await self.gemini_client.health_check():
+                logger.warning("Gemini API health check failed")
 
-        # Check disk space
-        import psutil
+            # Check disk space
+            import psutil
 
-        disk_usage = psutil.disk_usage("/app/data")
-        if disk_usage.percent > 90:
-            logger.warning("Low disk space", usage_percent=disk_usage.percent)
+            disk_usage = psutil.disk_usage("/app/data")
+            if disk_usage.percent > 90:
+                logger.warning("Low disk space", usage_percent=disk_usage.percent)
+                
+        except Exception as e:
+            logger.error("Health check failed", error=str(e))
 
     async def shutdown(self):
         """Graceful shutdown"""
