@@ -4,12 +4,13 @@ Gemini API Client
 Handles all interactions with Google's Gemini AI
 """
 
-import os
 import asyncio
-from typing import Dict, Any, Optional, List
+import os
+from typing import Any, Dict, List, Optional
+
+import google.generativeai as genai
 import structlog
 from tenacity import retry, stop_after_attempt, wait_exponential
-import google.generativeai as genai
 
 logger = structlog.get_logger()
 

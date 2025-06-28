@@ -6,7 +6,8 @@ Handles configuration loading and management
 
 import os
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import structlog
 import yaml
 from pydantic import BaseModel, Field

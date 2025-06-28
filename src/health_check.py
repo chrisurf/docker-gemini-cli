@@ -4,16 +4,17 @@ Health Check for Gemini Autonomous Agent
 Performs basic health checks for the application
 """
 
-import sys
 import asyncio
+import sys
 from pathlib import Path
+
 import structlog
 
 # Add src to path for imports
 sys.path.append(str(Path(__file__).parent))
 
-from gemini_client import GeminiClient
 from config_manager import ConfigManager
+from gemini_client import GeminiClient
 
 logger = structlog.get_logger()
 

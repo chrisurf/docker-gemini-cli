@@ -6,7 +6,8 @@ Handles task execution and processing logic
 
 import asyncio
 import json
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 import structlog
 
 logger = structlog.get_logger()

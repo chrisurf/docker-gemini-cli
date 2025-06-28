@@ -11,14 +11,15 @@ import signal
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional
-import structlog
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from typing import Any, Dict, Optional
 
+import structlog
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
+
+from config_manager import ConfigManager
 from gemini_client import GeminiClient
 from task_processor import TaskProcessor
-from config_manager import ConfigManager
 
 # Initialize structured logging
 logger = structlog.get_logger()
