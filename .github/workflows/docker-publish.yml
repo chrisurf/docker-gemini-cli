@@ -172,8 +172,8 @@ needs: [publish]
 if: always()
 steps:
 - name: Notify on success
-if: needs.publish.result == ‘success’
-run: echo “✅ Docker image published successfully!”
+  if: needs.publish.result == ‘success’
+  run: echo “✅ Docker image published successfully!”
 
 - name: Notify on failure
   if: needs.publish.result == 'failure'
