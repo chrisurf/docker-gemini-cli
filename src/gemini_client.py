@@ -87,7 +87,7 @@ class GeminiClient:
         self, prompt: str, context: Optional[Dict[str, Any]] = None
     ) -> str:
         """Prepare the full prompt with context and instructions"""
-        system_prompt = """You are an autonomous AI agent running in a Docker container. 
+        system_prompt = """You are an autonomous AI agent running in a Docker container.
 Your role is to complete tasks efficiently and accurately. You have access to:
 - File system operations in /app/data/
 - Various data processing capabilities
@@ -151,11 +151,11 @@ be explicit about your actions and results."""
 
             prompt = f"""
             File Analysis Task ({analysis_type}):
-            
+
             File: {file_path}
             Content:
             {content[:2000]}...  # Truncate for API limits
-            
+
             Please provide a comprehensive analysis including:
             1. Content summary
             2. Key insights
@@ -183,9 +183,9 @@ be explicit about your actions and results."""
 
         prompt = f"""
         Data Processing Task: {task_description}
-        
+
         Available data files: {', '.join(file_names)}
-        
+
         Please provide:
         1. Analysis approach
         2. Expected insights
@@ -202,12 +202,12 @@ be explicit about your actions and results."""
             test_prompt = "Hi"
             response = await self.generate_response(test_prompt)
             success = response.get("success", False)
-            
+
             if success:
                 logger.info("Health check passed", model=self.model_name)
             else:
                 logger.warning("Health check failed", error=response.get("error"))
-                
+
             return success
         except Exception as e:
             logger.error("Health check failed", error=str(e))

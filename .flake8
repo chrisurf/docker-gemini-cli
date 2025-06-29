@@ -1,0 +1,18 @@
+[flake8]
+max-line-length = 88
+extend-ignore = E203,W503,E501,F401
+exclude = 
+    .git,
+    __pycache__,
+    build,
+    dist,
+    .venv,
+    .pytest_cache,
+    .mypy_cache
+per-file-ignores =
+    __init__.py:F401
+    src/autonomous_agent.py:F401
+    src/gemini_client.py:F401
+    src/health_check.py:F401
+    src/task_processor.py:F401
+    src/config_manager.py:F401

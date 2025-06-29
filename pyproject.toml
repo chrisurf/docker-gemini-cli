@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
 [tool.black]
 line-length = 88
 target-version = ['py311']
@@ -11,15 +15,36 @@ extend-exclude = '''
   | \.mypy_cache
   | \.tox
   | \.venv
+  | \.pytest_cache
   | build
   | dist
+  | __pycache__
 )/
+'''
+force-exclude = '''
+/(
+  tests/
+  | docs/
+)
 '''
 
 [tool.isort]
 profile = "black"
 multi_line_output = 3
 line_length = 88
+known_first_party = ["src"]
+known_third_party = [
+  "google",
+  "structlog", 
+  "tenacity",
+  "pydantic",
+  "fastapi",
+  "uvicorn",
+  "watchdog",
+  "psutil"
+]
+src_paths = ["src"]
+skip_glob = ["tests/*", "build/*", "dist/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -30,4 +55,20 @@ addopts = [
     "--strict-markers",
     "--strict-config",
     "--verbose",
+]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503", "E501"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+    ".pytest_cache"
+]
+per-file-ignores = [
+    "__init__.py:F401",
+    "src/*:F401"
 ]

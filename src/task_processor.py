@@ -4,9 +4,8 @@ Task Processor for Gemini Autonomous Agent
 Handles task execution and processing logic
 """
 
-import asyncio
-import json
-from typing import Any, Dict, List
+from pathlib import Path
+from typing import Any, Dict
 
 import structlog
 
@@ -69,8 +68,6 @@ class TaskProcessor:
     ) -> Dict[str, Any]:
         """Handle data processing tasks"""
         # Get available data files
-        from pathlib import Path
-
         data_files = list(Path("/app/data/input").glob("*"))
         file_names = [f.name for f in data_files if f.is_file()]
 

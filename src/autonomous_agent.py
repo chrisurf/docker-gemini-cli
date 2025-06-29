@@ -6,12 +6,10 @@ Continuously monitors for tasks and executes them using Gemini AI
 
 import asyncio
 import json
-import os
 import signal
-import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import structlog
 from watchdog.events import FileSystemEventHandler
@@ -223,7 +221,7 @@ class AutonomousAgent:
             disk_usage = psutil.disk_usage("/app/data")
             if disk_usage.percent > 90:
                 logger.warning("Low disk space", usage_percent=disk_usage.percent)
-                
+
         except Exception as e:
             logger.error("Health check failed", error=str(e))
 

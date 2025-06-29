@@ -1,0 +1,57 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.1.1
+    hooks:
+      - id: black
+        name: Black Code Formatter
+        description: "The uncompromising Python code formatter"
+        entry: black
+        language: python
+        language_version: python3.11
+        require_serial: true
+        types_or: [python, pyi]
+        args: ["--config=pyproject.toml"]
+        files: ^src/.*\.py$
+        exclude: ^(tests/|build/|dist/)
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: Import Sorting
+        args: ["--profile", "black", "--check-only", "--diff"]
+        files: ^src/.*\.py$
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        name: Flake8 Linting
+        args: ["--max-line-length=88", "--extend-ignore=E203,W503"]
+        files: ^src/.*\.py$
+
+  - repo: local
+    hooks:
+      - id: black-src-only
+        name: Black Format src/ Directory
+        entry: black
+        language: system
+        files: ^src/.*\.py$
+        args: ["--config=pyproject.toml"]
+        pass_filenames: true
+        require_serial: true
+
+default_language_version:
+  python: python3.11
+
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false
