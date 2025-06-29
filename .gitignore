@@ -1,2 +1,3 @@
 .envrc
 logs/agent.log
+test_data/

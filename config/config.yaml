@@ -1,5 +1,5 @@
 # Default configuration file for Gemini Autonomous Agent
-gemini_model: "gemini-pro"
+gemini_model: "gemini-2.0-flash-lite"
 gemini_temperature: 0.7
 gemini_max_tokens: 2048
 log_level: "INFO"

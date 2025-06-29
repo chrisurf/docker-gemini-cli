@@ -27,7 +27,7 @@ class GeminiClient:
         genai.configure(api_key=self.api_key)
 
         # Initialize model
-        self.model_name = os.getenv("GEMINI_MODEL", "gemini-pro")
+        self.model_name = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-lite")
         self.model = genai.GenerativeModel(self.model_name)
 
         # Configuration

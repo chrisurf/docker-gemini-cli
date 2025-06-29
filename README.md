@@ -68,7 +68,7 @@ cat data/output/task-001_result.json
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
 | `GEMINI_API_KEY` | Google Gemini API key | - | ✅ |
-| `GEMINI_MODEL` | Gemini model to use | `gemini-pro` | ❌ |
+| `GEMINI_MODEL` | Gemini model to use | `gemini-2.0-flash-lite` | ❌ |
 | `GEMINI_TEMPERATURE` | Model temperature (0.0-1.0) | `0.7` | ❌ |
 | `GEMINI_MAX_TOKENS` | Maximum output tokens | `2048` | ❌ |
 | `LOG_LEVEL` | Logging level | `INFO` | ❌ |

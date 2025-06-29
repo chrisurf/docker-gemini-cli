@@ -19,7 +19,7 @@ class AgentConfig(BaseModel):
     """Agent configuration model"""
 
     gemini_api_key: str = Field(..., min_length=1)
-    gemini_model: str = Field(default="gemini-pro")
+    gemini_model: str = Field(default="gemini-2.0-flash-lite")
     gemini_temperature: float = Field(default=0.7, ge=0.0, le=1.0)
     gemini_max_tokens: int = Field(default=2048, gt=0)
     log_level: str = Field(default="INFO")
